@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # My App - E-Commerce Platform
 
 <p align="center">
