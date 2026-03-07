@@ -102,4 +102,32 @@ class OrderController extends Controller
             'order' => $order
         ]);
     }
+
+    /**
+     * User: Cancel pending order and restore stock
+     */
+    public function cancelOrder(Request $request, $id)
+    {
+        $order = Order::where('id', $id)
+            ->where('user_id', $request->user()->id)
+            ->where('status', 'pending')
+            ->firstOrFail();
+
+        return DB::transaction(function () use ($order) {
+            // Restore stock
+            foreach ($order->items as $item) {
+                $product = $item->product;
+                if ($product) {
+                    $product->increment('stock', $item->quantity);
+                }
+            }
+
+            $order->update(['status' => 'cancelled']);
+
+            return response()->json([
+                'message' => 'Order cancelled and stock restored.',
+                'status' => 'cancelled'
+            ]);
+        });
+    }
 }

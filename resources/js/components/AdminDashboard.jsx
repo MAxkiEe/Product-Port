@@ -859,9 +859,9 @@ export default function AdminDashboard() {
                                             value={order.status}
                                             onChange={(e) => handleUpdateOrderStatus(order.id, e.target.value)}
                                             className={`text-xs font-bold px-2 py-1 rounded-lg border-none focus:ring-2 focus:ring-blue-500 transition-all ${order.status === 'paid' || order.status === 'completed' ? 'bg-green-100 text-green-700' :
-                                                    order.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                                                        order.status === 'cancelled' ? 'bg-red-100 text-red-700' :
-                                                            'bg-blue-100 text-blue-700'
+                                                order.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                                                    order.status === 'cancelled' ? 'bg-red-100 text-red-700' :
+                                                        'bg-blue-100 text-blue-700'
                                                 }`}
                                         >
                                             <option value="pending">{t('user_dashboard.status_pending')}</option>
@@ -875,8 +875,18 @@ export default function AdminDashboard() {
                                     <td className="p-4 text-sm text-gray-600">
                                         {new Date(order.created_at).toLocaleDateString(i18n.language === 'th' ? 'th-TH' : 'en-US')}
                                     </td>
-                                    <td className="p-4 text-right">
-                                        <button className="text-blue-600 hover:text-blue-800 text-sm font-bold">{t('admin.view_details') || 'View Details'}</button>
+                                    <td className="p-4 text-right flex flex-col items-end gap-1">
+                                        <button className="text-blue-600 hover:text-blue-800 text-sm font-bold">{t('admin.view_details')}</button>
+                                        {order.payment?.slip_url && (
+                                            <a
+                                                href={order.payment.slip_url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-green-600 hover:text-green-800 text-[10px] font-bold bg-green-50 px-2 py-0.5 rounded border border-green-100 transition-colors"
+                                            >
+                                                {t('admin.view_slip')}
+                                            </a>
+                                        )}
                                     </td>
                                 </tr>
                             )) : (

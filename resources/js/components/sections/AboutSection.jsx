@@ -219,14 +219,14 @@ const TeamSection = ({ t }) => {
         id: num,
         name: t('about_section.employee_name', { num }),
         position: getPosition(index),
-        bio: t('about.employee_bio')
+        bio: t('about_section.employee_bio')
     }));
 
     return (
         <div className="animate-on-scroll">
             <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">{t('about.team_title')}</h2>
-                <p className="text-gray-600">{t('about.team_subtitle')}</p>
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">{t('about_section.team_title')}</h2>
+                <p className="text-gray-600">{t('about_section.team_subtitle')}</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">

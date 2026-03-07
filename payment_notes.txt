@@ -1,0 +1,15 @@
+<?php
+/**
+ * Manual Slip Upload Integration Plan
+ * 
+ * 1. Database: Add slip_url to payments table.
+ * 2. Backend: 
+ *    - Update PaymentController@processPayment to handle file uploads.
+ *    - Store slips in /storage/app/public/slips.
+ * 3. Frontend:
+ *    - Create PaymentQR step in CheckoutModal.
+ *    - Implement File Upload in React.
+ * 4. Admin:
+ *    - Add "View Slip" button in Order Table.
+ *    - Update Order status when payment is verified.
+ */

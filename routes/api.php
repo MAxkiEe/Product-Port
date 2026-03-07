@@ -40,6 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Orders & Payment
     Route::get('/user/orders', [OrderController::class, 'getMyOrders']);
     Route::post('/checkout', [OrderController::class, 'checkout']);
+    Route::post('/orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
     Route::post('/payment/process', [PaymentController::class, 'processPayment']);
 
     // User Management
@@ -58,4 +59,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/security/blocked-ips', [SecurityController::class, 'getBlockedIps']);
     Route::post('/security/block-ip', [SecurityController::class, 'blockIp']);
     Route::delete('/security/block-ip/{id}', [SecurityController::class, 'unblockIp']);
+
+    // Omise Payment
+    Route::post('/omise/charge', [\App\Http\Controllers\OmiseController::class, 'createCharge']);
 });
+
+Route::post('/omise/webhook', [\App\Http\Controllers\OmiseController::class, 'handleWebhook']);

@@ -309,27 +309,6 @@ const ProductsSection = ({ productsRef, products, wishlist, toggleWishlist, addT
           </>
         )}
 
-        {/* Stats */}
-        {filteredProducts.length > 0 && (
-          <div className="mt-12 grid grid-cols-3 gap-4 text-center text-sm">
-            <div className="bg-white p-3 rounded-lg">
-              <div className="font-bold text-gray-900">{products.length}</div>
-              <div className="text-gray-600">{t('products_section.stat_total')}</div>
-            </div>
-            <div className="bg-white p-3 rounded-lg">
-              <div className="font-bold text-gray-900">
-                {products.filter(p => p.stock > 0).length}
-              </div>
-              <div className="text-gray-600">{t('products_section.stat_in_stock')}</div>
-            </div>
-            <div className="bg-white p-3 rounded-lg">
-              <div className="font-bold text-gray-900">
-                ฿{Math.min(...products.map(p => p.price)).toLocaleString()}
-              </div>
-              <div className="text-gray-600">{t('products_section.stat_starting')}</div>
-            </div>
-          </div>
-        )}
       </div>
     </section>
   );
