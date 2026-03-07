@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { teamMembers } from '../data/ProductsData';
 
 const AboutSection = ({ aboutRef }) => {
+    const { t } = useTranslation();
     const [activeStat, setActiveStat] = useState(null);
     const statsRef = useRef([]);
 
@@ -35,40 +37,46 @@ const AboutSection = ({ aboutRef }) => {
             <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Section Header */}
                 <div className="text-center mb-16 animate-on-scroll">
-                   
+
                     <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
-                        รู้จักเราให้มากขึ้น
+                        {t('about_section.title')}
                     </h1>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                        กว่า 10 ปีที่เรามุ่งมั่นนำเสนอสินค้าคุณภาพสู่ผู้บริโภค
+                        {t('about_section.subtitle')}
                     </p>
                 </div>
 
-                <CompanyStory activeStat={activeStat} setActiveStat={setActiveStat} statsRef={statsRef} />
-                <MissionVision />
-                <TeamSection />
+                <CompanyStory activeStat={activeStat} setActiveStat={setActiveStat} statsRef={statsRef} t={t} />
+                <MissionVision t={t} />
+                <TeamSection t={t} />
             </div>
         </section>
     );
 };
 
-const CompanyStory = ({ activeStat, setActiveStat, statsRef }) => {
+const CompanyStory = ({ activeStat, setActiveStat, statsRef, t }) => {
     const stats = [
-        { value: "10+", label: "ปีที่ให้บริการ", icon: (
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-        )},
-        { value: "50k+", label: "ลูกค้าที่ไว้วางใจ", icon: (
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
-        )},
-        { value: "1000+", label: "สินค้าพร้อมจำหน่าย", icon: (
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-            </svg>
-        )}
+        {
+            value: "10+", label: t('about_section.stats_years'), icon: (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            )
+        },
+        {
+            value: "50k+", label: t('about_section.stats_customers'), icon: (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+            )
+        },
+        {
+            value: "1000+", label: t('about_section.stats_products'), icon: (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+            )
+        }
     ];
 
     return (
@@ -76,14 +84,13 @@ const CompanyStory = ({ activeStat, setActiveStat, statsRef }) => {
             <div className="space-y-6">
                 <h2 className="text-3xl font-bold text-gray-900 mb-4 flex items-center">
                     <span className="w-1 h-8 bg-gray-900 rounded-full mr-3"></span>
-                    เรื่องราวของเรา
+                    {t('about_section.story_title')}
                 </h2>
                 <p className="text-lg text-gray-600 leading-relaxed">
-                    เราเริ่มต้นจากความมุ่งมั่นที่จะนำเสนอสินค้าคุณภาพดีให้กับผู้บริโภค 
-                    ด้วยประสบการณ์กว่า 10 ปีในวงการ ทำให้เราเข้าใจความต้องการของลูกค้า
+                    {t('about_section.story_p1')}
                 </p>
                 <p className="text-lg text-gray-600 leading-relaxed">
-                    วันนี้เรามีทีมงานมืออาชีพพร้อมให้บริการ และคัดสรรสินค้าที่ดีที่สุดมาให้คุณ
+                    {t('about_section.story_p2')}
                 </p>
 
                 {/* Stats Grid */}
@@ -94,25 +101,21 @@ const CompanyStory = ({ activeStat, setActiveStat, statsRef }) => {
                             ref={el => statsRef.current[index] = el}
                             onMouseEnter={() => setActiveStat(index)}
                             onMouseLeave={() => setActiveStat(null)}
-                            className={`text-center p-4 rounded-xl transition-all duration-300 ${
-                                activeStat === index 
-                                    ? 'bg-gray-900 text-white scale-105 shadow-xl' 
-                                    : 'bg-gray-50 hover:bg-gray-100'
-                            }`}
+                            className={`text-center p-4 rounded-xl transition-all duration-300 ${activeStat === index
+                                ? 'bg-gray-900 text-white scale-105 shadow-xl'
+                                : 'bg-gray-50 hover:bg-gray-100'
+                                }`}
                         >
-                            <div className={`flex justify-center mb-2 transition-colors duration-300 ${
-                                activeStat === index ? 'text-white' : 'text-gray-600'
-                            }`}>
+                            <div className={`flex justify-center mb-2 transition-colors duration-300 ${activeStat === index ? 'text-white' : 'text-gray-600'
+                                }`}>
                                 {stat.icon}
                             </div>
-                            <div className={`text-2xl font-bold transition-colors duration-300 ${
-                                activeStat === index ? 'text-white' : 'text-gray-900'
-                            }`}>
+                            <div className={`text-2xl font-bold transition-colors duration-300 ${activeStat === index ? 'text-white' : 'text-gray-900'
+                                }`}>
                                 {stat.value}
                             </div>
-                            <div className={`text-sm transition-colors duration-300 ${
-                                activeStat === index ? 'text-gray-200' : 'text-gray-500'
-                            }`}>
+                            <div className={`text-sm transition-colors duration-300 ${activeStat === index ? 'text-gray-200' : 'text-gray-500'
+                                }`}>
                                 {stat.label}
                             </div>
                         </div>
@@ -135,7 +138,7 @@ const CompanyStory = ({ activeStat, setActiveStat, statsRef }) => {
     );
 };
 
-const MissionVision = () => {
+const MissionVision = ({ t }) => {
     const [activeCard, setActiveCard] = useState(null);
 
     const cards = [
@@ -145,8 +148,8 @@ const MissionVision = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
             ),
-            title: "พันธกิจของเรา",
-            description: "มอบสินค้าคุณภาพพร้อมบริการที่เป็นเลิศให้กับลูกค้าทุกคน"
+            title: t('about_section.mission_title'),
+            description: t('about_section.mission_desc')
         },
         {
             icon: (
@@ -155,8 +158,8 @@ const MissionVision = () => {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
             ),
-            title: "วิสัยทัศน์",
-            description: "เป็นผู้นำด้านอีคอมเมิร์ซอันดับหนึ่งในใจลูกค้า"
+            title: t('about_section.vision_title'),
+            description: t('about_section.vision_desc')
         }
     ];
 
@@ -167,62 +170,63 @@ const MissionVision = () => {
                     key={index}
                     onMouseEnter={() => setActiveCard(index)}
                     onMouseLeave={() => setActiveCard(null)}
-                    className={`relative p-8 rounded-2xl transition-all duration-500 cursor-pointer overflow-hidden ${
-                        activeCard === index 
-                            ? 'bg-gray-900 text-white scale-[1.02] shadow-2xl' 
-                            : 'bg-gray-50 hover:bg-gray-100'
-                    }`}
+                    className={`relative p-8 rounded-2xl transition-all duration-500 cursor-pointer overflow-hidden ${activeCard === index
+                        ? 'bg-gray-900 text-white scale-[1.02] shadow-2xl'
+                        : 'bg-gray-50 hover:bg-gray-100'
+                        }`}
                 >
                     {/* Background decoration */}
-                    <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-gray-800 to-gray-900 rounded-full filter blur-3xl opacity-0 transition-opacity duration-500 ${
-                        activeCard === index ? 'opacity-20' : ''
-                    }`}></div>
+                    <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-gray-800 to-gray-900 rounded-full filter blur-3xl opacity-0 transition-opacity duration-500 ${activeCard === index ? 'opacity-20' : ''
+                        }`}></div>
 
                     <div className="relative z-10">
-                        <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 transition-all duration-500 ${
-                            activeCard === index 
-                                ? 'bg-white text-gray-900 rotate-12' 
-                                : 'bg-gray-200 text-gray-700'
-                        }`}>
+                        <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-6 transition-all duration-500 ${activeCard === index
+                            ? 'bg-white text-gray-900 rotate-12'
+                            : 'bg-gray-200 text-gray-700'
+                            }`}>
                             {card.icon}
                         </div>
-                        <h3 className={`text-2xl font-bold mb-4 transition-colors duration-300 ${
-                            activeCard === index ? 'text-white' : 'text-gray-900'
-                        }`}>
+                        <h3 className={`text-2xl font-bold mb-4 transition-colors duration-300 ${activeCard === index ? 'text-white' : 'text-gray-900'
+                            }`}>
                             {card.title}
                         </h3>
-                        <p className={`text-lg leading-relaxed transition-colors duration-300 ${
-                            activeCard === index ? 'text-gray-200' : 'text-gray-600'
-                        }`}>
+                        <p className={`text-lg leading-relaxed transition-colors duration-300 ${activeCard === index ? 'text-gray-200' : 'text-gray-600'
+                            }`}>
                             {card.description}
                         </p>
                     </div>
 
                     {/* Corner decoration */}
-                    <div className={`absolute bottom-0 right-0 w-24 h-24 border-2 border-gray-300 rounded-tl-[100px] transition-opacity duration-500 ${
-                        activeCard === index ? 'opacity-20' : 'opacity-0'
-                    }`}></div>
+                    <div className={`absolute bottom-0 right-0 w-24 h-24 border-2 border-gray-300 rounded-tl-[100px] transition-opacity duration-500 ${activeCard === index ? 'opacity-20' : 'opacity-0'
+                        }`}></div>
                 </div>
             ))}
         </div>
     );
 };
 
-const TeamSection = () => {
+const TeamSection = ({ t }) => {
     const [hoveredMember, setHoveredMember] = useState(null);
+
+    const positions_th = ['ผู้ก่อตั้ง', 'ซีอีโอ', 'หัวหน้าทีมขาย', 'ผู้จัดการฝ่ายบริการ'];
+    const positions_en = ['Founder', 'CEO', 'Head of Sales', 'Service Manager'];
+
+    const getPosition = (index) => {
+        return t('about_section.team_position_' + index, { defaultValue: positions_en[index] });
+    };
 
     const teamData = teamMembers.map((num, index) => ({
         id: num,
-        name: `พนักงาน ${num}`,
-        position: ['ผู้ก่อตั้ง', 'ซีอีโอ', 'หัวหน้าทีมขาย', 'ผู้จัดการฝ่ายบริการ'][index] || 'ตำแหน่ง',
-        bio: ' passionate about delivering the best experience to our customers.'
+        name: t('about_section.employee_name', { num }),
+        position: getPosition(index),
+        bio: t('about.employee_bio')
     }));
 
     return (
         <div className="animate-on-scroll">
             <div className="text-center mb-12">
-                <h2 className="text-3xl font-bold text-gray-900 mb-4">ทีมงานของเรา</h2>
-                <p className="text-gray-600">พบกับทีมงานมืออาชีพที่พร้อมให้บริการคุณ</p>
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">{t('about.team_title')}</h2>
+                <p className="text-gray-600">{t('about.team_subtitle')}</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -234,26 +238,23 @@ const TeamSection = () => {
                         className="group relative"
                     >
                         <div className={`absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent rounded-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-500`}></div>
-                        
+
                         <div className="relative text-center">
                             {/* Avatar with animation */}
                             <div className="relative mb-6">
-                                <div className={`w-40 h-40 mx-auto rounded-full bg-gradient-to-br from-gray-200 to-gray-300 overflow-hidden transition-all duration-500 ${
-                                    hoveredMember === index ? 'scale-110 shadow-2xl' : 'shadow-lg'
-                                }`}>
+                                <div className={`w-40 h-40 mx-auto rounded-full bg-gradient-to-br from-gray-200 to-gray-300 overflow-hidden transition-all duration-500 ${hoveredMember === index ? 'scale-110 shadow-2xl' : 'shadow-lg'
+                                    }`}>
                                     <div className="w-full h-full flex items-center justify-center">
-                                        <svg className={`w-20 h-20 text-gray-400 transition-all duration-500 ${
-                                            hoveredMember === index ? 'scale-110 text-white' : ''
-                                        }`} fill="currentColor" viewBox="0 0 24 24">
+                                        <svg className={`w-20 h-20 text-gray-400 transition-all duration-500 ${hoveredMember === index ? 'scale-110 text-white' : ''
+                                            }`} fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                                         </svg>
                                     </div>
                                 </div>
 
                                 {/* Social links on hover */}
-                                <div className={`absolute -bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2 transition-all duration-500 ${
-                                    hoveredMember === index ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-                                }`}>
+                                <div className={`absolute -bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2 transition-all duration-500 ${hoveredMember === index ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                                    }`}>
                                     {['facebook', 'twitter', 'linkedin'].map((social, i) => (
                                         <button
                                             key={i}
@@ -270,19 +271,16 @@ const TeamSection = () => {
                             </div>
 
                             {/* Info */}
-                            <h3 className={`text-xl font-bold text-gray-900 mb-1 transition-colors duration-300 ${
-                                hoveredMember === index ? 'text-gray-700' : ''
-                            }`}>
+                            <h3 className={`text-xl font-bold text-gray-900 mb-1 transition-colors duration-300 ${hoveredMember === index ? 'text-gray-700' : ''
+                                }`}>
                                 {member.name}
                             </h3>
-                            <p className={`text-sm font-medium mb-2 transition-colors duration-300 ${
-                                hoveredMember === index ? 'text-gray-900' : 'text-gray-500'
-                            }`}>
+                            <p className={`text-sm font-medium mb-2 transition-colors duration-300 ${hoveredMember === index ? 'text-gray-900' : 'text-gray-500'
+                                }`}>
                                 {member.position}
                             </p>
-                            <p className={`text-sm max-w-xs mx-auto transition-all duration-300 ${
-                                hoveredMember === index ? 'text-gray-600 opacity-100' : 'text-gray-400 opacity-0'
-                            }`}>
+                            <p className={`text-sm max-w-xs mx-auto transition-all duration-300 ${hoveredMember === index ? 'text-gray-600 opacity-100' : 'text-gray-400 opacity-0'
+                                }`}>
                                 {member.bio}
                             </p>
                         </div>

@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const SearchModal = ({ showSearch, setShowSearch, searchQuery, setSearchQuery, products, onSelectProduct }) => {
+    const { t } = useTranslation();
     const [recentSearches, setRecentSearches] = useState([]);
-    const [popularSearches] = useState(['สมาร์ทโฟน', 'แล็ปท็อป', 'หูฟัง', 'แท็บเล็ต', 'อุปกรณ์เสริม']);
+    const popularSearches = t('search.popular_tags', { returnObjects: true }) || [];
     const inputRef = useRef(null);
-    
-    const filteredProducts = products.filter(p => 
+
+    const filteredProducts = products.filter(p =>
         p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.category.toLowerCase().includes(searchQuery.toLowerCase())
     );
@@ -28,23 +30,20 @@ const SearchModal = ({ showSearch, setShowSearch, searchQuery, setSearchQuery, p
     };
 
     return (
-        <div 
-            className={`fixed inset-0 z-50 transition-all duration-500 ${
-                showSearch ? 'visible' : 'invisible'
-            }`}
+        <div
+            className={`fixed inset-0 z-50 transition-all duration-500 ${showSearch ? 'visible' : 'invisible'
+                }`}
         >
             {/* Backdrop with blur */}
-            <div 
-                className={`absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-500 ${
-                    showSearch ? 'opacity-100' : 'opacity-0'
-                }`}
+            <div
+                className={`absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-500 ${showSearch ? 'opacity-100' : 'opacity-0'
+                    }`}
                 onClick={() => setShowSearch(false)}
             />
 
             {/* Modal */}
-            <div className={`relative max-w-2xl mx-auto mt-20 transform transition-all duration-500 ${
-                showSearch ? 'translate-y-0 opacity-100' : '-translate-y-10 opacity-0'
-            }`}>
+            <div className={`relative max-w-2xl mx-auto mt-20 transform transition-all duration-500 ${showSearch ? 'translate-y-0 opacity-100' : '-translate-y-10 opacity-0'
+                }`}>
                 <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
                     {/* Header */}
                     <div className="relative p-6 border-b border-gray-100">
@@ -55,9 +54,9 @@ const SearchModal = ({ showSearch, setShowSearch, searchQuery, setSearchQuery, p
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                     </svg>
                                 </div>
-                                <h2 className="text-2xl font-bold text-gray-900">ค้นหาสินค้า</h2>
+                                <h2 className="text-2xl font-bold text-gray-900">{t('search.title')}</h2>
                             </div>
-                            <button 
+                            <button
                                 onClick={() => setShowSearch(false)}
                                 className="w-10 h-10 rounded-2xl hover:bg-gray-100 flex items-center justify-center group transition"
                             >
@@ -71,7 +70,7 @@ const SearchModal = ({ showSearch, setShowSearch, searchQuery, setSearchQuery, p
                     {/* Search Input */}
                     <div className="p-6">
                         <div className="relative">
-                            <input 
+                            <input
                                 ref={inputRef}
                                 type="text"
                                 value={searchQuery}
@@ -81,14 +80,14 @@ const SearchModal = ({ showSearch, setShowSearch, searchQuery, setSearchQuery, p
                                         handleSearch(searchQuery);
                                     }
                                 }}
-                                placeholder="พิมพ์ชื่อสินค้า หรือหมวดหมู่ที่ต้องการค้นหา..."
+                                placeholder={t('search.placeholder')}
                                 className="w-full bg-gray-50 text-gray-900 border-2 border-gray-200 rounded-2xl py-4 pl-12 pr-4 focus:border-gray-400 focus:outline-none transition placeholder-gray-400"
                             />
                             <svg className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                             {searchQuery && (
-                                <button 
+                                <button
                                     onClick={() => setSearchQuery('')}
                                     className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                                 >
@@ -104,7 +103,7 @@ const SearchModal = ({ showSearch, setShowSearch, searchQuery, setSearchQuery, p
                     {searchQuery && (
                         <div className="px-6 pb-2">
                             <p className="text-sm text-gray-500">
-                                พบ {filteredProducts.length} รายการ สำหรับ "{searchQuery}"
+                                {t('search.results_count', { count: filteredProducts.length, query: searchQuery })}
                             </p>
                         </div>
                     )}
@@ -113,13 +112,13 @@ const SearchModal = ({ showSearch, setShowSearch, searchQuery, setSearchQuery, p
                     {!searchQuery && (
                         <div className="px-6 pb-4">
                             <div className="flex items-center justify-between mb-3">
-                                <h3 className="text-sm font-semibold text-gray-700">ค้นหาล่าสุด</h3>
+                                <h3 className="text-sm font-semibold text-gray-700">{t('search.recent')}</h3>
                                 {recentSearches.length > 0 && (
-                                    <button 
+                                    <button
                                         onClick={() => setRecentSearches([])}
                                         className="text-xs text-gray-500 hover:text-gray-700"
                                     >
-                                        ล้างทั้งหมด
+                                        {t('search.clear_all')}
                                     </button>
                                 )}
                             </div>
@@ -141,11 +140,11 @@ const SearchModal = ({ showSearch, setShowSearch, searchQuery, setSearchQuery, p
                                         </button>
                                     ))
                                 ) : (
-                                    <p className="text-sm text-gray-400">ไม่มีประวัติการค้นหา</p>
+                                    <p className="text-sm text-gray-400">{t('search.no_recent')}</p>
                                 )}
                             </div>
 
-                            <h3 className="text-sm font-semibold text-gray-700 mt-4 mb-3">ค้นหายอดนิยม</h3>
+                            <h3 className="text-sm font-semibold text-gray-700 mt-4 mb-3">{t('search.popular')}</h3>
                             <div className="flex flex-wrap gap-2">
                                 {popularSearches.map((term, index) => (
                                     <button
@@ -169,9 +168,9 @@ const SearchModal = ({ showSearch, setShowSearch, searchQuery, setSearchQuery, p
                             filteredProducts.length > 0 ? (
                                 <div className="space-y-2">
                                     {filteredProducts.map(product => (
-                                        <SearchResultItem 
-                                            key={product.id} 
-                                            product={product} 
+                                        <SearchResultItem
+                                            key={product.id}
+                                            product={product}
                                             onClick={() => {
                                                 onSelectProduct(product);
                                                 handleSearch(product.name);
@@ -186,14 +185,14 @@ const SearchModal = ({ showSearch, setShowSearch, searchQuery, setSearchQuery, p
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                         </svg>
                                     </div>
-                                    <p className="text-gray-600 font-medium">ไม่พบสินค้าที่ค้นหา</p>
-                                    <p className="text-sm text-gray-400 mt-1">ลองค้นหาด้วยคำอื่นดูนะคะ</p>
+                                    <p className="text-gray-600 font-medium">{t('search.not_found_title')}</p>
+                                    <p className="text-sm text-gray-400 mt-1">{t('search.not_found_desc')}</p>
                                 </div>
                             )
                         ) : (
                             /* Suggestions */
                             <div className="space-y-4">
-                                <h3 className="text-sm font-semibold text-gray-700">สินค้าแนะนำ</h3>
+                                <h3 className="text-sm font-semibold text-gray-700">{t('search.suggested')}</h3>
                                 <div className="grid grid-cols-2 gap-3">
                                     {products.slice(0, 4).map(product => (
                                         <div
@@ -220,11 +219,11 @@ const SearchModal = ({ showSearch, setShowSearch, searchQuery, setSearchQuery, p
                     <div className="border-t border-gray-100 p-4 bg-gray-50">
                         <div className="flex items-center justify-between text-xs text-gray-500">
                             <div className="flex items-center space-x-4">
-                                <span>↑↓ เลือก</span>
-                                <span>↵ เข้า</span>
-                                <span>ESC ปิด</span>
+                                <span>{t('search.key_select')}</span>
+                                <span>{t('search.key_enter')}</span>
+                                <span>{t('search.key_esc')}</span>
                             </div>
-                            <span>ค้นหาสินค้าทั้งหมด {products.length} รายการ</span>
+                            <span>{t('search.total_products_hint', { count: products.length })}</span>
                         </div>
                     </div>
                 </div>
@@ -234,14 +233,14 @@ const SearchModal = ({ showSearch, setShowSearch, searchQuery, setSearchQuery, p
 };
 
 const SearchResultItem = ({ product, onClick }) => (
-    <div 
+    <div
         className="group flex items-center justify-between p-4 bg-gray-50 hover:bg-gray-100 rounded-2xl cursor-pointer transition-all duration-200 hover:shadow-md"
         onClick={onClick}
     >
         <div className="flex items-center space-x-4">
             {/* Product Image Placeholder */}
             <div className="w-16 h-16 bg-gradient-to-br from-gray-300 to-gray-400 rounded-xl flex-shrink-0"></div>
-            
+
             <div>
                 <h4 className="font-semibold text-gray-900 group-hover:text-gray-700 transition">
                     {product.name}
@@ -252,9 +251,8 @@ const SearchResultItem = ({ product, onClick }) => (
                         {[...Array(5)].map((_, i) => (
                             <svg
                                 key={i}
-                                className={`w-3 h-3 ${
-                                    i < Math.floor(product.rating) ? 'text-gray-700' : 'text-gray-300'
-                                }`}
+                                className={`w-3 h-3 ${i < Math.floor(product.rating) ? 'text-gray-700' : 'text-gray-300'
+                                    }`}
                                 fill="currentColor"
                                 viewBox="0 0 20 20"
                             >
@@ -266,7 +264,7 @@ const SearchResultItem = ({ product, onClick }) => (
                 </div>
             </div>
         </div>
-        
+
         <div className="text-right">
             <span className="text-lg font-bold text-gray-900">฿{product.price.toLocaleString()}</span>
             {product.originalPrice > product.price && (

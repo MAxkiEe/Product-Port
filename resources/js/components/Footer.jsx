@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { socialLinks } from './data/ProductsData';
 
 const Footer = ({ scrollToSection, aboutRef, productsRef, contactRef }) => {
+    const { t } = useTranslation();
     const [hoveredLink, setHoveredLink] = useState(null);
     const [email, setEmail] = useState('');
     const [subscribed, setSubscribed] = useState(false);
     const [showBackToTop, setShowBackToTop] = useState(false);
-    
+
     const quickLinks = [
-        { name: 'about', label: 'เกี่ยวกับเรา', ref: aboutRef },
-        { name: 'products', label: 'สินค้า', ref: productsRef },
-        { name: 'contact', label: 'ติดต่อ', ref: contactRef }
+        { name: 'about', label: t('footer.about'), ref: aboutRef },
+        { name: 'products', label: t('footer.products'), ref: productsRef },
+        { name: 'contact', label: t('footer.contact'), ref: contactRef }
     ];
 
     const helpLinks = [
-        'วิธีการสั่งซื้อ',
-        'นโยบายการคืนเงิน',
-        'คำถามที่พบบ่อย'
+        t('footer.help_order'),
+        t('footer.help_refund'),
+        t('footer.help_faq')
     ];
 
     const handleSubscribe = (e) => {
@@ -47,48 +49,51 @@ const Footer = ({ scrollToSection, aboutRef, productsRef, contactRef }) => {
         <>
             <footer className="bg-white border-t border-gray-200 py-16">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    
+
                     {/* Main Footer Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-                        
+
                         {/* Brand Section - 4 cols */}
                         <div className="md:col-span-4">
-                            <BrandSection />
+                            <BrandSection t={t} />
                         </div>
 
                         {/* Quick Links - 2 cols */}
                         <div className="md:col-span-2">
-                            <QuickLinksSection 
-                                links={quickLinks} 
+                            <QuickLinksSection
+                                links={quickLinks}
                                 scrollToSection={scrollToSection}
                                 hoveredLink={hoveredLink}
                                 setHoveredLink={setHoveredLink}
+                                t={t}
                             />
                         </div>
 
                         {/* Help Section - 2 cols */}
                         <div className="md:col-span-2">
-                            <HelpSection 
+                            <HelpSection
                                 links={helpLinks}
                                 hoveredLink={hoveredLink}
                                 setHoveredLink={setHoveredLink}
+                                t={t}
                             />
                         </div>
 
                         {/* Contact & Newsletter - 4 cols */}
                         <div className="md:col-span-4">
-                            <ContactSection />
-                            <NewsletterSection 
+                            <ContactSection t={t} />
+                            <NewsletterSection
                                 email={email}
                                 setEmail={setEmail}
                                 handleSubscribe={handleSubscribe}
                                 subscribed={subscribed}
+                                t={t}
                             />
                         </div>
                     </div>
 
                     {/* Copyright */}
-                    <Copyright currentYear={currentYear} />
+                    <Copyright currentYear={currentYear} t={t} />
                 </div>
             </footer>
 
@@ -98,12 +103,12 @@ const Footer = ({ scrollToSection, aboutRef, productsRef, contactRef }) => {
     );
 };
 
-const BrandSection = () => {
+const BrandSection = ({ t }) => {
     const [logoHover, setLogoHover] = useState(false);
 
     return (
         <div className="space-y-4">
-            <div 
+            <div
                 className="relative inline-block"
                 onMouseEnter={() => setLogoHover(true)}
                 onMouseLeave={() => setLogoHover(false)}
@@ -111,32 +116,31 @@ const BrandSection = () => {
                 <h3 className="text-xl font-light tracking-wider text-gray-900">
                     <span className="font-bold">LO</span>GO
                 </h3>
-                <div className={`absolute -bottom-1 left-0 h-0.5 bg-gray-900 transition-all duration-300 ${
-                    logoHover ? 'w-full' : 'w-0'
-                }`} />
+                <div className={`absolute -bottom-1 left-0 h-0.5 bg-gray-900 transition-all duration-300 ${logoHover ? 'w-full' : 'w-0'
+                    }`} />
             </div>
             <p className="text-gray-500 text-sm leading-relaxed max-w-xs">
-                เราคือผู้นำด้านสินค้าคุณภาพ ที่ใส่ใจทุกรายละเอียด เพื่อมอบประสบการณ์ที่ดีที่สุดให้กับคุณ
+                {t('footer.brand_desc')}
             </p>
             <div className="flex items-center space-x-4 text-sm text-gray-400">
-                <span>10K+ คำสั่งซื้อ</span>
+                <span>{t('footer.orders_count')}</span>
                 <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
-                <span>ถูกใจ 95%</span>
+                <span>{t('footer.satisfaction_rate')}</span>
             </div>
         </div>
     );
 };
 
-const QuickLinksSection = ({ links, scrollToSection, hoveredLink, setHoveredLink }) => {
+const QuickLinksSection = ({ links, scrollToSection, hoveredLink, setHoveredLink, t }) => {
     return (
         <div>
             <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
-                ลิงก์ด่วน
+                {t('footer.quick_links')}
             </h3>
             <ul className="space-y-3">
                 {links.map(link => (
                     <li key={link.name}>
-                        <button 
+                        <button
                             onClick={() => scrollToSection(link.ref, link.name)}
                             onMouseEnter={() => setHoveredLink(link.name)}
                             onMouseLeave={() => setHoveredLink(null)}
@@ -151,11 +155,11 @@ const QuickLinksSection = ({ links, scrollToSection, hoveredLink, setHoveredLink
     );
 };
 
-const HelpSection = ({ links, hoveredLink, setHoveredLink }) => {
+const HelpSection = ({ links, hoveredLink, setHoveredLink, t }) => {
     return (
         <div>
             <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
-                ช่วยเหลือ
+                {t('footer.help')}
             </h3>
             <ul className="space-y-3">
                 {links.map((link, index) => (
@@ -174,31 +178,31 @@ const HelpSection = ({ links, hoveredLink, setHoveredLink }) => {
     );
 };
 
-const ContactSection = () => {
+const ContactSection = ({ t }) => {
     return (
         <div className="mb-6">
             <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
-                ติดต่อ
+                {t('footer.contact_title')}
             </h3>
             <ul className="space-y-2 text-sm text-gray-600">
-                <li>โทร: 02-123-4567</li>
-                <li>อีเมล: contact@grayscale.com</li>
-                <li>ที่อยู่: 123 ถนนสุขุมวิท กรุงเทพฯ</li>
+                <li>{t('footer.phone_val')}</li>
+                <li>{t('footer.email_val')}</li>
+                <li>{t('footer.address_val')}</li>
             </ul>
         </div>
     );
 };
 
-const NewsletterSection = ({ email, setEmail, handleSubscribe, subscribed }) => {
+const NewsletterSection = ({ email, setEmail, handleSubscribe, subscribed, t }) => {
     return (
         <div>
             <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
-                จดหมายข่าว
+                {t('footer.newsletter')}
             </h3>
             <form onSubmit={handleSubscribe} className="relative max-w-xs">
                 <input
                     type="email"
-                    placeholder="อีเมลของคุณ"
+                    placeholder={t('footer.email_plh')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm 
@@ -210,13 +214,13 @@ const NewsletterSection = ({ email, setEmail, handleSubscribe, subscribed }) => 
                     className="absolute right-1 top-1/2 transform -translate-y-1/2 
                              px-4 py-1.5 text-sm text-gray-600 hover:text-gray-900 transition-colors"
                 >
-                    ตกลง
+                    {t('footer.subscribe_btn')}
                 </button>
-                
+
                 {/* Success Message */}
                 {subscribed && (
                     <div className="absolute -bottom-6 left-0 text-xs text-gray-600">
-                ✓ สมัครเรียบร้อย
+                        {t('footer.subscribed')}
                     </div>
                 )}
             </form>
@@ -224,15 +228,15 @@ const NewsletterSection = ({ email, setEmail, handleSubscribe, subscribed }) => 
     );
 };
 
-const Copyright = ({ currentYear }) => {
+const Copyright = ({ currentYear, t }) => {
     return (
         <div className="border-t border-gray-200 mt-12 pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center text-xs text-gray-400">
-                <p>© {currentYear} logo. All rights reserved.</p>
+                <p>{t('footer.copyright', { year: currentYear })}</p>
                 <div className="flex space-x-4 mt-2 md:mt-0">
-                    <span className="hover:text-gray-600 transition-colors cursor-pointer">นโยบายส่วนตัว</span>
+                    <span className="hover:text-gray-600 transition-colors cursor-pointer">{t('footer.privacy_policy')}</span>
                     <span>•</span>
-                    <span className="hover:text-gray-600 transition-colors cursor-pointer">ข้อกำหนด</span>
+                    <span className="hover:text-gray-600 transition-colors cursor-pointer">{t('footer.terms')}</span>
                 </div>
             </div>
         </div>
@@ -241,7 +245,7 @@ const Copyright = ({ currentYear }) => {
 
 const BackToTopButton = ({ show, onClick }) => {
     if (!show) return null;
-    
+
     return (
         <button
             onClick={onClick}

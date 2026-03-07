@@ -1,32 +1,34 @@
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const ProductsSection = ({ productsRef, products, wishlist, toggleWishlist, addToCart, isLoading, setSelectedProduct, setShowProductModal }) => {
+  const { t } = useTranslation();
   const [hoveredProduct, setHoveredProduct] = useState(null);
-  const [activeFilter, setActiveFilter] = useState('ทั้งหมด');
+  const [activeFilter, setActiveFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('default');
   const [visibleProducts, setVisibleProducts] = useState(6);
   const [addedToCart, setAddedToCart] = useState({});
 
   const categories = useMemo(() => {
-    return ['ทั้งหมด', ...new Set(products.map(p => p.category))];
+    return ['all', ...new Set(products.map(p => p.categoryKey))];
   }, [products]);
 
   const filteredProducts = useMemo(() => {
     let filtered = [...products];
 
-    if (activeFilter !== 'ทั้งหมด') {
-      filtered = filtered.filter(p => p.category === activeFilter);
+    if (activeFilter !== 'all') {
+      filtered = filtered.filter(p => p.categoryKey === activeFilter);
     }
 
     if (searchTerm) {
-      filtered = filtered.filter(p => 
+      filtered = filtered.filter(p =>
         p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.description.toLowerCase().includes(searchTerm.toLowerCase())
+        t(p.descriptionKey).toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    switch(sortBy) {
+    switch (sortBy) {
       case 'price-low':
         filtered.sort((a, b) => a.price - b.price);
         break;
@@ -75,14 +77,14 @@ const ProductsSection = ({ productsRef, products, wishlist, toggleWishlist, addT
   return (
     <section ref={productsRef} className="bg-gray-50 py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            สินค้าของเรา
+            {t('products_section.section_title')}
           </h2>
           <p className="text-gray-600 text-lg">
-            เลือกซื้อสินค้าคุณภาพจากเรา
+            {t('products_section.section_subtitle')}
           </p>
           <div className="w-20 h-0.5 bg-gray-300 mx-auto mt-4"></div>
         </div>
@@ -92,7 +94,7 @@ const ProductsSection = ({ productsRef, products, wishlist, toggleWishlist, addT
           <div className="relative max-w-md mx-auto">
             <input
               type="text"
-              placeholder="ค้นหาสินค้า..."
+              placeholder={t('products_section.search_placeholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-gray-400 focus:ring-2 focus:ring-gray-200 transition-all outline-none"
@@ -102,7 +104,7 @@ const ProductsSection = ({ productsRef, products, wishlist, toggleWishlist, addT
                 onClick={() => setSearchTerm('')}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-xs text-gray-400 hover:text-gray-600 bg-gray-100 px-2 py-1 rounded"
               >
-                ล้าง
+                {t('products_section.clear')}
               </button>
             )}
           </div>
@@ -114,15 +116,15 @@ const ProductsSection = ({ productsRef, products, wishlist, toggleWishlist, addT
                 key={cat}
                 onClick={() => setActiveFilter(cat)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all
-                  ${activeFilter === cat 
-                    ? 'bg-gray-800 text-white' 
+                  ${activeFilter === cat
+                    ? 'bg-gray-800 text-white'
                     : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
                   }`}
               >
-                {cat}
-                {cat !== 'ทั้งหมด' && (
+                {cat === 'all' ? t('products_section.all') : t(cat)}
+                {cat !== 'all' && (
                   <span className="ml-1 text-xs opacity-75">
-                    ({products.filter(p => p.category === cat).length})
+                    ({products.filter(p => p.categoryKey === cat).length})
                   </span>
                 )}
               </button>
@@ -132,18 +134,18 @@ const ProductsSection = ({ productsRef, products, wishlist, toggleWishlist, addT
           {/* Sort */}
           <div className="flex justify-between items-center bg-white p-4 rounded-xl">
             <div className="text-sm text-gray-600">
-              พบ {filteredProducts.length} สินค้า
+              {t('products_section.found_count', { count: filteredProducts.length })}
             </div>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
               className="px-3 py-2 border border-gray-200 rounded-lg text-sm focus:border-gray-400 outline-none bg-white"
             >
-              <option value="default">เรียงลำดับ</option>
-              <option value="price-low">ราคา ต่ำ-สูง</option>
-              <option value="price-high">ราคา สูง-ต่ำ</option>
-              <option value="rating">คะแนนรีวิว</option>
-              <option value="name">ชื่อสินค้า</option>
+              <option value="default">{t('products_section.sort_default')}</option>
+              <option value="price-low">{t('products_section.sort_price_low')}</option>
+              <option value="price-high">{t('products_section.sort_price_high')}</option>
+              <option value="rating">{t('products_section.sort_rating')}</option>
+              <option value="name">{t('products_section.sort_name')}</option>
             </select>
           </div>
         </div>
@@ -151,15 +153,15 @@ const ProductsSection = ({ productsRef, products, wishlist, toggleWishlist, addT
         {/* Product Grid */}
         {filteredProducts.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-gray-500 text-lg mb-4">ไม่พบสินค้าที่ค้นหา</p>
+            <p className="text-gray-500 text-lg mb-4">{t('products_section.not_found')}</p>
             <button
               onClick={() => {
                 setSearchTerm('');
-                setActiveFilter('ทั้งหมด');
+                setActiveFilter('all');
               }}
               className="px-6 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition"
             >
-              รีเซ็ตตัวกรอง
+              {t('products_section.reset_filter')}
             </button>
           </div>
         ) : (
@@ -186,14 +188,14 @@ const ProductsSection = ({ productsRef, products, wishlist, toggleWishlist, addT
                       {/* Stock Badge */}
                       {product.stock < 10 && (
                         <span className={`absolute top-2 left-2 ${getStockColor(product.stock)} text-white px-2 py-1 rounded text-xs`}>
-                          {product.stock === 0 ? 'หมด' : `เหลือ ${product.stock}`}
+                          {product.stock === 0 ? t('products_section.out_of_stock') : t('products_section.remaining', { count: product.stock })}
                         </span>
                       )}
 
                       {/* Discount Badge */}
                       {discount && (
                         <span className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded text-xs">
-                          ลด {discount}%
+                          {t('products_section.discount', { percent: discount })}
                         </span>
                       )}
 
@@ -218,7 +220,7 @@ const ProductsSection = ({ productsRef, products, wishlist, toggleWishlist, addT
                           {product.name}
                         </h3>
                         <span className="bg-gray-100 px-2 py-0.5 rounded text-xs text-gray-600">
-                          {product.category}
+                          {t(product.categoryKey)}
                         </span>
                       </div>
 
@@ -241,7 +243,7 @@ const ProductsSection = ({ productsRef, products, wishlist, toggleWishlist, addT
 
                       {/* Description */}
                       <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                        {product.description}
+                        {t(product.descriptionKey)}
                       </p>
 
                       {/* Price */}
@@ -261,15 +263,15 @@ const ProductsSection = ({ productsRef, products, wishlist, toggleWishlist, addT
                         <button
                           onClick={(e) => handleAddToCart(e, product)}
                           className={`px-4 py-2 rounded-lg text-sm font-medium transition
-                            ${product.stock === 0 
-                              ? 'bg-gray-300 cursor-not-allowed' 
+                            ${product.stock === 0
+                              ? 'bg-gray-300 cursor-not-allowed'
                               : isAdded
                                 ? 'bg-green-500 text-white'
                                 : 'bg-gray-800 text-white hover:bg-gray-700'
                             }`}
                           disabled={product.stock === 0 || isLoading}
                         >
-                          {isAdded ? 'เพิ่มแล้ว' : product.stock === 0 ? 'หมด' : 'เพิ่ม'}
+                          {isAdded ? t('products_section.btn_added') : product.stock === 0 ? t('products_section.out_of_stock') : t('products_section.btn_add')}
                         </button>
                       </div>
 
@@ -283,7 +285,7 @@ const ProductsSection = ({ productsRef, products, wishlist, toggleWishlist, addT
                             ></div>
                           </div>
                           <p className="text-xs text-gray-500 mt-1">
-                            เหลือน้อย
+                            {t('products_section.low_stock')}
                           </p>
                         </div>
                       )}
@@ -300,7 +302,7 @@ const ProductsSection = ({ productsRef, products, wishlist, toggleWishlist, addT
                   onClick={loadMore}
                   className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
                 >
-                  โหลดเพิ่ม ({filteredProducts.length - visibleProducts})
+                  {t('products_section.load_more', { count: filteredProducts.length - visibleProducts })}
                 </button>
               </div>
             )}
@@ -312,19 +314,19 @@ const ProductsSection = ({ productsRef, products, wishlist, toggleWishlist, addT
           <div className="mt-12 grid grid-cols-3 gap-4 text-center text-sm">
             <div className="bg-white p-3 rounded-lg">
               <div className="font-bold text-gray-900">{products.length}</div>
-              <div className="text-gray-600">สินค้าทั้งหมด</div>
+              <div className="text-gray-600">{t('products_section.stat_total')}</div>
             </div>
             <div className="bg-white p-3 rounded-lg">
               <div className="font-bold text-gray-900">
                 {products.filter(p => p.stock > 0).length}
               </div>
-              <div className="text-gray-600">มีในสต็อก</div>
+              <div className="text-gray-600">{t('products_section.stat_in_stock')}</div>
             </div>
             <div className="bg-white p-3 rounded-lg">
               <div className="font-bold text-gray-900">
                 ฿{Math.min(...products.map(p => p.price)).toLocaleString()}
               </div>
-              <div className="text-gray-600">เริ่มต้น</div>
+              <div className="text-gray-600">{t('products_section.stat_starting')}</div>
             </div>
           </div>
         )}

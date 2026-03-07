@@ -1,27 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { features } from '../data/ProductsData';
+import { useTranslation } from 'react-i18next';
 
 const HomeSection = ({ homeRef, productsRef, scrollToSection }) => {
+  const { t } = useTranslation();
   const [activeSlide, setActiveSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
-  
+
   // จำลองวิดิโอด้วย Slideshow
   const slides = [
     {
       image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1200',
-      
+
     },
     {
       image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200',
-      
+
     },
     {
       image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=1200',
-      
+
     },
     {
       image: 'https://images.unsplash.com/photo-1486401899868-0e435ed85128?w=1200',
-      
+
     }
   ];
 
@@ -54,9 +56,8 @@ const HomeSection = ({ homeRef, productsRef, scrollToSection }) => {
           {slides.map((slide, index) => (
             <div
               key={index}
-              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-                index === activeSlide ? 'opacity-100' : 'opacity-0'
-              }`}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === activeSlide ? 'opacity-100' : 'opacity-0'
+                }`}
             >
               <div
                 className="absolute inset-0 bg-cover bg-center scale-110"
@@ -80,35 +81,33 @@ const HomeSection = ({ homeRef, productsRef, scrollToSection }) => {
               <button
                 key={index}
                 onClick={() => setActiveSlide(index)}
-                className={`h-1 rounded-full transition-all duration-300 ${
-                  index === activeSlide 
-                    ? 'w-8 bg-white' 
-                    : 'w-4 bg-white/40 hover:bg-white/60'
-                }`}
+                className={`h-1 rounded-full transition-all duration-300 ${index === activeSlide
+                  ? 'w-8 bg-white'
+                  : 'w-4 bg-white/40 hover:bg-white/60'
+                  }`}
                 aria-label={`Go to slide ${index + 1}`}
               />
             ))}
-          </div>        
+          </div>
 
-        
 
-    
+
+
         </div>
 
         {/* Content */}
         <div className="relative z-10 h-full flex items-center justify-center">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
             <div className="animate-fade-in-up">
-                    
+
 
               <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-                <span className="block">สินค้าคุณภาพ</span>
-                <span className="text-white/90 text-4xl md:text-6xl">ที่คุณไว้วางใจ</span>
+                <span className="block">{t('home_section.hero_title_1')}</span>
+                <span className="text-white/90 text-4xl md:text-6xl">{t('home_section.hero_title_2')}</span>
               </h1>
 
               <p className="text-lg md:text-xl text-white/80 mb-10 max-w-2xl mx-auto backdrop-blur-sm bg-black/10 p-4 rounded-2xl">
-                สัมผัสประสบการณ์ใหม่กับสินค้าสุดล้ำที่ออกแบบมาเพื่อคุณโดยเฉพาะ
-                พร้อมฟีเจอร์ที่ครบครันและใช้งานง่าย
+                {t('home_section.hero_subtitle')}
               </p>
 
               {/* Buttons */}
@@ -117,15 +116,15 @@ const HomeSection = ({ homeRef, productsRef, scrollToSection }) => {
                   onClick={() => scrollToSection(productsRef, 'products')}
                   className="px-8 py-3 bg-white text-gray-900 rounded-lg font-medium hover:bg-white/90 transition-all duration-300 transform hover:scale-105 shadow-lg"
                 >
-                  เริ่มต้นใช้งาน
+                  {t('home_section.get_started')}
                 </button>
                 <button className="px-8 py-3 bg-transparent border border-white/30 text-white rounded-lg font-medium hover:bg-white/10 transition-all duration-300 transform hover:scale-105 backdrop-blur-sm">
-                  ดูตัวอย่าง
+                  {t('home_section.view_demo')}
                 </button>
               </div>
 
               {/* Scroll Indicator */}
-             
+
             </div>
           </div>
         </div>
@@ -136,9 +135,9 @@ const HomeSection = ({ homeRef, productsRef, scrollToSection }) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="text-center mb-16">
-            <span className="text-sm text-gray-400 uppercase tracking-wider">คุณสมบัติ</span>
+            <span className="text-sm text-gray-400 uppercase tracking-wider">{t('home_section.features_subtitle')}</span>
             <h2 className="text-3xl md:text-4xl font-light text-gray-900 mt-2">
-              ทำไมต้องเลือกเรา
+              {t('home_section.features_title')}
             </h2>
             <div className="w-16 h-0.5 bg-gray-200 mx-auto mt-6"></div>
           </div>
@@ -153,7 +152,7 @@ const HomeSection = ({ homeRef, productsRef, scrollToSection }) => {
       </div>
 
       {/* Custom Animations */}
-      <style jsx>{`
+      <style>{`
         @keyframes fade-in-up {
           from {
             opacity: 0;
@@ -194,6 +193,7 @@ const HomeSection = ({ homeRef, productsRef, scrollToSection }) => {
 
 // Feature Card Component
 const FeatureCard = ({ feature, index }) => {
+  const { t } = useTranslation();
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -208,30 +208,27 @@ const FeatureCard = ({ feature, index }) => {
         <span className="text-5xl font-light text-gray-300">
           {(index + 1).toString().padStart(2, '0')}
         </span>
-        <div className={`absolute -top-2 -right-2 w-16 h-16 bg-gray-900/5 rounded-full transition-all duration-700 ${
-          isHovered ? 'scale-150 opacity-0' : 'scale-100 opacity-100'
-        }`}></div>
+        <div className={`absolute -top-2 -right-2 w-16 h-16 bg-gray-900/5 rounded-full transition-all duration-700 ${isHovered ? 'scale-150 opacity-0' : 'scale-100 opacity-100'
+          }`}></div>
       </div>
 
       {/* Content */}
       <h3 className="text-xl font-medium text-gray-900 mb-3">
-        {feature.title}
+        {feature.icon} {t(feature.titleKey)}
       </h3>
       <p className="text-gray-500 text-sm leading-relaxed">
-        {feature.desc}
+        {t(feature.descKey)}
       </p>
 
       {/* Animated Line */}
       <div className="absolute bottom-0 left-8 right-8 h-px bg-gray-200 overflow-hidden">
-        <div className={`h-full bg-gray-900 transition-all duration-700 ${
-          isHovered ? 'w-full' : 'w-0'
-        }`}></div>
+        <div className={`h-full bg-gray-900 transition-all duration-700 ${isHovered ? 'w-full' : 'w-0'
+          }`}></div>
       </div>
 
       {/* Hover Effect */}
-      <div className={`absolute inset-0 rounded-2xl transition-all duration-500 pointer-events-none ${
-        isHovered ? 'shadow-[inset_0_0_0_1px_rgba(0,0,0,0.1)]' : ''
-      }`}></div>
+      <div className={`absolute inset-0 rounded-2xl transition-all duration-500 pointer-events-none ${isHovered ? 'shadow-[inset_0_0_0_1px_rgba(0,0,0,0.1)]' : ''
+        }`}></div>
     </div>
   );
 };

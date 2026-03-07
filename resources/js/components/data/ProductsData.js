@@ -4,26 +4,26 @@ export const products = Array.from({ length: 6 }).map((_, index) => ({
     name: `Product Name ${index + 1}`,
     price: 9990,
     originalPrice: 12990,
-    category: index % 3 === 0 ? 'สมาร์ทโฟน' : index % 3 === 1 ? 'แล็ปท็อป' : 'อุปกรณ์เสริม',
+    categoryKey: index % 3 === 0 ? 'products_section.category_smartphone' : index % 3 === 1 ? 'products_section.category_laptop' : 'products_section.category_accessories',
     rating: 4.5,
     reviews: Math.floor(Math.random() * 100) + 20,
-    description: 'รายละเอียดสินค้าสั้นๆ บอกถึงคุณสมบัติเด่น',
+    descriptionKey: 'products_section.short_desc',
     colors: ['white', 'gray-200', 'gray-400', 'gray-600'],
     stock: Math.floor(Math.random() * 50) + 10,
     images: ['main', '1', '2', '3'],
-    specs: [
-        'จอภาพความละเอียดสูง',
-        'แบตเตอรี่ใช้งานได้ยาวนาน',
-        'ระบบปฏิบัติการล่าสุด',
-        'กล้องคุณภาพสูง'
+    specsKeys: [
+        'products_section.spec_screen',
+        'products_section.spec_battery',
+        'products_section.spec_os',
+        'products_section.spec_camera'
     ]
 }));
 
 export const features = [
-    { icon: "⭐", title: "คุณภาพระดับพรีเมียม", desc: "วัสดุคุณภาพสูง ผ่านการทดสอบอย่างเข้มงวด" },
-    { icon: "🚚", title: "จัดส่งรวดเร็ว", desc: "จัดส่งภายใน 24 ชั่วโมง ทั่วประเทศ" },
-    { icon: "🛡️", title: "รับประกันสินค้า", desc: "รับประกันนาน 2 ปี พร้อมบริการหลังการขาย" },
-    { icon: "💯", title: "การันตีความพึงพอใจ", desc: "ลูกค้าพึงพอใจ 99% จากการรีวิวจริง" }
+    { icon: "⭐", titleKey: "home_section.features.premium.title", descKey: "home_section.features.premium.desc" },
+    { icon: "🚚", titleKey: "home_section.features.delivery.title", descKey: "home_section.features.delivery.desc" },
+    { icon: "🛡️", titleKey: "home_section.features.warranty.title", descKey: "home_section.features.warranty.desc" },
+    { icon: "💯", titleKey: "home_section.features.satisfaction.title", descKey: "home_section.features.satisfaction.desc" }
 ];
 
 export const teamMembers = [1, 2, 3, 4];

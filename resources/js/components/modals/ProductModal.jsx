@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
-const ProductModal = ({ 
-    showProductModal, 
-    setShowProductModal, 
-    selectedProduct, 
-    wishlist, 
+const ProductModal = ({
+    showProductModal,
+    setShowProductModal,
+    selectedProduct,
+    wishlist,
     toggleWishlist,
     addToCart,
-    isLoading 
+    isLoading
 }) => {
+    const { t } = useTranslation();
     const [productQuantity, setProductQuantity] = useState(1);
     const [selectedColor, setSelectedColor] = useState('');
     const [selectedImage, setSelectedImage] = useState(0);
-    const [activeTab, setActiveTab] = useState('รายละเอียด');
+    const [activeTab, setActiveTab] = useState('desc');
 
     useEffect(() => {
         if (selectedProduct?.colors?.length > 0) {
@@ -25,23 +27,20 @@ const ProductModal = ({
     const discount = Math.round(((selectedProduct.originalPrice - selectedProduct.price) / selectedProduct.originalPrice) * 100);
 
     return (
-        <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ${
-            showProductModal ? 'visible' : 'invisible'
-        }`}>
+        <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ${showProductModal ? 'visible' : 'invisible'
+            }`}>
             {/* Backdrop with blur */}
-            <div 
-                className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
-                    showProductModal ? 'opacity-100' : 'opacity-0'
-                }`}
+            <div
+                className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${showProductModal ? 'opacity-100' : 'opacity-0'
+                    }`}
                 onClick={() => setShowProductModal(false)}
             />
 
             {/* Modal */}
-            <div className={`relative bg-white max-w-6xl w-full max-h-[90vh] overflow-hidden transform transition-all duration-300 shadow-2xl rounded-2xl ${
-                showProductModal ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'
-            }`}>
+            <div className={`relative bg-white max-w-6xl w-full max-h-[90vh] overflow-hidden transform transition-all duration-300 shadow-2xl rounded-2xl ${showProductModal ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'
+                }`}>
                 {/* Close Button */}
-                <button 
+                <button
                     onClick={() => setShowProductModal(false)}
                     className="absolute top-4 right-4 z-10 w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center hover:bg-gray-100 hover:border-gray-300 hover:shadow-md transition-all"
                 >
@@ -53,7 +52,7 @@ const ProductModal = ({
                 <div className="flex flex-col lg:flex-row h-full">
                     {/* Left Column - Images */}
                     <div className="lg:w-3/5 p-6 bg-gradient-to-br from-gray-50 to-gray-100">
-                        <ProductImages 
+                        <ProductImages
                             product={selectedProduct}
                             wishlist={wishlist}
                             toggleWishlist={toggleWishlist}
@@ -66,7 +65,7 @@ const ProductModal = ({
                     {/* Right Column - Info */}
                     <div className="lg:w-2/5 bg-white overflow-y-auto border-l border-gray-200 rounded-r-2xl">
                         <div className="p-6">
-                            <ProductInfo 
+                            <ProductInfo
                                 product={selectedProduct}
                                 productQuantity={productQuantity}
                                 setProductQuantity={setProductQuantity}
@@ -78,6 +77,7 @@ const ProductModal = ({
                                 activeTab={activeTab}
                                 setActiveTab={setActiveTab}
                                 discount={discount}
+                                t={t}
                             />
                         </div>
                     </div>
@@ -107,9 +107,9 @@ const ProductImages = ({ product, wishlist, toggleWishlist, selectedImage, setSe
                             -{discount}%
                         </div>
                     )}
-                    
+
                     {/* Wishlist Button */}
-                    <button 
+                    <button
                         onClick={() => toggleWishlist(product.id)}
                         className="absolute top-4 right-4 w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full shadow-lg flex items-center justify-center hover:bg-white hover:scale-110 transition-all border border-gray-200"
                     >
@@ -133,11 +133,10 @@ const ProductImages = ({ product, wishlist, toggleWishlist, selectedImage, setSe
                     <button
                         key={index}
                         onClick={() => setSelectedImage(index)}
-                        className={`relative rounded-xl overflow-hidden shadow-md transition-all ${
-                            selectedImage === index 
-                                ? 'ring-2 ring-black ring-offset-2 scale-105' 
+                        className={`relative rounded-xl overflow-hidden shadow-md transition-all ${selectedImage === index
+                                ? 'ring-2 ring-black ring-offset-2 scale-105'
                                 : 'hover:scale-105 hover:shadow-lg'
-                        }`}
+                            }`}
                     >
                         <div className={`${images[index]} h-20 rounded-xl`}>
                             {selectedImage === index && (
@@ -151,32 +150,37 @@ const ProductImages = ({ product, wishlist, toggleWishlist, selectedImage, setSe
     );
 };
 
-const ProductInfo = ({ 
-    product, 
-    productQuantity, 
-    setProductQuantity, 
-    selectedColor, 
+const ProductInfo = ({
+    product,
+    productQuantity,
+    setProductQuantity,
+    selectedColor,
     setSelectedColor,
     addToCart,
     setShowProductModal,
     isLoading,
     activeTab,
     setActiveTab,
-    discount 
+    discount,
+    t
 }) => {
-    const tabs = ['รายละเอียด', 'สเปก', 'รีวิว'];
+    const tabs = [
+        { id: 'desc', label: t('product.tab_desc') },
+        { id: 'specs', label: t('product.tab_specs') },
+        { id: 'reviews', label: t('product.tab_reviews') }
+    ];
 
     return (
         <div className="space-y-6">
             {/* Header */}
             <div>
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
-                
+
                 <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full">
                         {product.category}
                     </span>
-                    <ProductRating rating={product.rating} reviews={product.reviews} />
+                    <ProductRating rating={product.rating} reviews={product.reviews} t={t} />
                 </div>
             </div>
 
@@ -203,9 +207,9 @@ const ProductInfo = ({
             <div className="flex items-center space-x-3">
                 <div className={`w-3 h-3 rounded-full ${product.stock > 0 ? 'bg-green-500' : 'bg-red-500'} shadow-sm`} />
                 <span className={`text-sm font-medium ${product.stock > 0 ? 'text-gray-900' : 'text-red-600'}`}>
-                    {product.stock > 0 
-                        ? `เหลือในสต็อก ${product.stock} ชิ้น` 
-                        : 'สินค้าหมดชั่วคราว'
+                    {product.stock > 0
+                        ? t('product.in_stock', { count: product.stock })
+                        : t('product.out_of_stock')
                     }
                 </span>
             </div>
@@ -218,7 +222,7 @@ const ProductInfo = ({
             {/* Colors */}
             {product.colors?.length > 0 && (
                 <div>
-                    <h3 className="text-sm font-semibold text-gray-900 mb-3">เลือกสี</h3>
+                    <h3 className="text-sm font-semibold text-gray-900 mb-3">{t('product.select_color')}</h3>
                     <div className="flex flex-wrap gap-3">
                         {product.colors.map(color => (
                             <button
@@ -226,12 +230,11 @@ const ProductInfo = ({
                                 onClick={() => setSelectedColor(color)}
                                 className="relative group"
                             >
-                                <div 
-                                    className={`w-10 h-10 rounded-full shadow-md transition-all ${
-                                        selectedColor === color 
-                                            ? 'ring-2 ring-black ring-offset-2 scale-110' 
+                                <div
+                                    className={`w-10 h-10 rounded-full shadow-md transition-all ${selectedColor === color
+                                            ? 'ring-2 ring-black ring-offset-2 scale-110'
                                             : 'group-hover:scale-105 group-hover:shadow-lg'
-                                    }`}
+                                        }`}
                                     style={{ backgroundColor: color }}
                                 />
                                 {selectedColor === color && (
@@ -249,10 +252,10 @@ const ProductInfo = ({
 
             {/* Quantity */}
             <div>
-                <h3 className="text-sm font-semibold text-gray-900 mb-3">จำนวน</h3>
+                <h3 className="text-sm font-semibold text-gray-900 mb-3">{t('product.quantity')}</h3>
                 <div className="flex items-center space-x-4">
                     <div className="flex items-center border border-gray-300 rounded-full shadow-sm overflow-hidden">
-                        <button 
+                        <button
                             onClick={() => setProductQuantity(p => Math.max(1, p - 1))}
                             className="w-12 h-12 flex items-center justify-center hover:bg-gray-100 transition disabled:opacity-50 text-lg font-medium"
                             disabled={product.stock === 0}
@@ -262,7 +265,7 @@ const ProductInfo = ({
                         <span className="w-14 text-center text-lg font-semibold text-gray-900">
                             {productQuantity}
                         </span>
-                        <button 
+                        <button
                             onClick={() => setProductQuantity(p => Math.min(product.stock, p + 1))}
                             className="w-12 h-12 flex items-center justify-center hover:bg-gray-100 transition disabled:opacity-50 text-lg font-medium"
                             disabled={product.stock === 0 || productQuantity >= product.stock}
@@ -270,10 +273,10 @@ const ProductInfo = ({
                             +
                         </button>
                     </div>
-                    
+
                     {product.stock > 0 && product.stock < 10 && (
                         <div className="text-sm text-orange-600 bg-orange-50 px-3 py-1.5 rounded-full">
-                            เหลือน้อย
+                            {t('product.low_stock')}
                         </div>
                     )}
                 </div>
@@ -281,7 +284,7 @@ const ProductInfo = ({
 
             {/* Action Buttons */}
             <div className="flex gap-3 pt-2">
-                <button 
+                <button
                     onClick={() => {
                         addToCart(product, productQuantity);
                         setShowProductModal(false);
@@ -290,19 +293,19 @@ const ProductInfo = ({
                     className="flex-1 bg-gray-900 text-white py-4 rounded-full font-medium hover:bg-gray-800 transition-all shadow-md hover:shadow-lg disabled:bg-gray-300 flex items-center justify-center space-x-2"
                 >
                     {isLoading ? (
-                        <span>กำลังเพิ่ม...</span>
+                        <span>{t('product.adding')}</span>
                     ) : (
                         <>
                             <span>🛒</span>
-                            <span>เพิ่มตะกร้า</span>
+                            <span>{t('product.add_cart')}</span>
                         </>
                     )}
                 </button>
-                <button 
+                <button
                     className="flex-1 border-2 border-gray-900 text-gray-900 py-4 rounded-full font-medium hover:bg-gray-50 transition-all shadow-sm hover:shadow-md disabled:opacity-50"
                     disabled={product.stock === 0}
                 >
-                    ซื้อทันที
+                    {t('product.buy_now')}
                 </button>
             </div>
 
@@ -311,16 +314,15 @@ const ProductInfo = ({
                 <div className="flex space-x-6">
                     {tabs.map(tab => (
                         <button
-                            key={tab}
-                            onClick={() => setActiveTab(tab)}
-                            className={`py-3 text-sm font-medium transition-all relative ${
-                                activeTab === tab 
-                                    ? 'text-gray-900' 
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`py-3 text-sm font-medium transition-all relative ${activeTab === tab.id
+                                    ? 'text-gray-900'
                                     : 'text-gray-500 hover:text-gray-700'
-                            }`}
+                                }`}
                         >
-                            {tab}
-                            {activeTab === tab && (
+                            {tab.label}
+                            {activeTab === tab.id && (
                                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gray-900 rounded-full" />
                             )}
                         </button>
@@ -330,77 +332,40 @@ const ProductInfo = ({
 
             {/* Tab Content - Scrollable */}
             <div className="py-3 text-sm text-gray-600 bg-gray-50 p-4 rounded-2xl max-h-48 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-                {activeTab === 'รายละเอียด' && (
+                {activeTab === 'desc' && (
                     <div className="space-y-3">
-                        <p className="font-medium text-gray-900">รายละเอียดสินค้า:</p>
+                        <p className="font-medium text-gray-900">{t('product.desc_label')}</p>
                         <ul className="space-y-2">
-                            <li className="flex items-start">
-                                <span className="mr-2 text-gray-400">•</span>
-                                <span>วัสดุคุณภาพสูง ผลิตจากโรงงานมาตรฐาน ISO 9001:2015 ที่ได้รับการรับรองระดับสากล</span>
-                            </li>
-                            <li className="flex items-start">
-                                <span className="mr-2 text-gray-400">•</span>
-                                <span>ออกแบบมาเพื่อการใช้งานที่ทนทานและยาวนาน ด้วยเทคโนโลยีการผลิตที่ทันสมัย</span>
-                            </li>
-                            <li className="flex items-start">
-                                <span className="mr-2 text-gray-400">•</span>
-                                <span>รับประกันสินค้า 1 ปี พร้อมบริการหลังการขายและศูนย์บริการทั่วประเทศ</span>
-                            </li>
-                            <li className="flex items-start">
-                                <span className="mr-2 text-gray-400">•</span>
-                                <span>ผ่านการทดสอบคุณภาพจากห้องปฏิบัติการมาตรฐานก่อนจัดส่งทุกชิ้น</span>
-                            </li>
+                            {t('product.desc_points', { returnObjects: true }).map((point, index) => (
+                                <li key={index} className="flex items-start">
+                                    <span className="mr-2 text-gray-400">•</span>
+                                    <span>{point}</span>
+                                </li>
+                            ))}
                         </ul>
                     </div>
                 )}
-                {activeTab === 'สเปก' && (
+                {activeTab === 'specs' && (
                     <div className="space-y-3">
-                        <p className="font-medium text-gray-900">ข้อมูลจำเพาะ:</p>
+                        <p className="font-medium text-gray-900">{t('product.specs_label')}</p>
                         <ul className="space-y-3">
-                            <li className="flex flex-col">
-                                <span className="text-gray-500 text-xs">ขนาดสินค้า</span>
-                                <span className="text-gray-900">15.6 x 25.4 x 1.8 ซม. (กว้าง x ยาว x สูง)</span>
-                            </li>
-                            <li className="flex flex-col">
-                                <span className="text-gray-500 text-xs">น้ำหนัก</span>
-                                <span className="text-gray-900">1.8 กิโลกรัม พร้อมแบตเตอรี่ในตัว</span>
-                            </li>
-                            <li className="flex flex-col">
-                                <span className="text-gray-500 text-xs">วัสดุ</span>
-                                <span className="text-gray-900">อะลูมิเนียมอัลลอยเกรดการบิน + พลาสติก PC/ABS คุณภาพสูง</span>
-                            </li>
-                            <li className="flex flex-col">
-                                <span className="text-gray-500 text-xs">สี</span>
-                                <span className="text-gray-900">{product.colors?.join(', ') || 'ดำ / เทา / เงิน'}</span>
-                            </li>
-                            <li className="flex flex-col">
-                                <span className="text-gray-500 text-xs">การเชื่อมต่อ</span>
-                                <span className="text-gray-900">Bluetooth 5.3, USB-C, Wi-Fi 6E, NFC</span>
-                            </li>
-                            <li className="flex flex-col">
-                                <span className="text-gray-500 text-xs">แบตเตอรี่</span>
-                                <span className="text-gray-900">5000 mAh ใช้งานได้ต่อเนื่อง 12 ชั่วโมง</span>
-                            </li>
-                            <li className="flex flex-col">
-                                <span className="text-gray-500 text-xs">ระบบปฏิบัติการ</span>
-                                <span className="text-gray-900">รองรับ Windows 11 / macOS / iOS / Android</span>
-                            </li>
-                            <li className="flex flex-col">
-                                <span className="text-gray-500 text-xs">การรับประกัน</span>
-                                <span className="text-gray-900">2 ปี (รวมอะไหล่และค่าแรง)</span>
-                            </li>
-                            <li className="flex flex-col">
-                                <span className="text-gray-500 text-xs">มาตรฐานการผลิต</span>
-                                <span className="text-gray-900">ISO 9001, ISO 14001, RoHS, CE, FCC</span>
-                            </li>
+                            {['spec_size', 'spec_weight', 'spec_material', 'spec_color', 'spec_conn', 'spec_batt', 'spec_os', 'spec_warranty', 'spec_cert'].map(specKey => {
+                                const spec = t(`product.${specKey}`, { returnObjects: true, colors: product.colors?.join(', ') || t('product.spec_color_default') });
+                                return (
+                                    <li key={specKey} className="flex flex-col">
+                                        <span className="text-gray-500 text-xs">{spec.label}</span>
+                                        <span className="text-gray-900">{spec.value}</span>
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </div>
                 )}
-                {activeTab === 'รีวิว' && (
+                {activeTab === 'reviews' && (
                     <div className="text-center py-6">
                         <div className="text-4xl text-gray-300 mb-2">★★★</div>
-                        <p className="text-gray-400">ยังไม่มีรีวิวสำหรับสินค้านี้</p>
-                        <p className="text-xs text-gray-400 mt-2">มาเป็นคนแรกที่รีวิวสินค้านี้</p>
+                        <p className="text-gray-400">{t('product.no_reviews')}</p>
+                        <p className="text-xs text-gray-400 mt-2">{t('product.be_first_review')}</p>
                     </div>
                 )}
             </div>
@@ -409,25 +374,25 @@ const ProductInfo = ({
             <div className="grid grid-cols-3 gap-3 pt-3">
                 <div className="bg-gray-50 p-3 rounded-xl text-center hover:shadow-md transition">
                     <div className="text-black text-xl mb-1">📦</div>
-                    <p className="text-xs font-medium text-gray-900">ส่งฟรี</p>
-                    <p className="text-xs text-gray-500">เมื่อครบ 5,000</p>
+                    <p className="text-xs font-medium text-gray-900">{t('product.free_shipping')}</p>
+                    <p className="text-xs text-gray-500">{t('product.shipping_detail')}</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded-xl text-center hover:shadow-md transition">
                     <div className="text-black text-xl mb-1">✓</div>
-                    <p className="text-xs font-medium text-gray-900">รับประกัน</p>
-                    <p className="text-xs text-gray-500">2 ปีเต็ม</p>
+                    <p className="text-xs font-medium text-gray-900">{t('product.warranty')}</p>
+                    <p className="text-xs text-gray-500">{t('product.warranty_detail')}</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded-xl text-center hover:shadow-md transition">
                     <div className="text-black text-xl mb-1">↩</div>
-                    <p className="text-xs font-medium text-gray-900">คืนเงิน</p>
-                    <p className="text-xs text-gray-500">ภายใน 7 วัน</p>
+                    <p className="text-xs font-medium text-gray-900">{t('product.refund')}</p>
+                    <p className="text-xs text-gray-500">{t('product.refund_detail')}</p>
                 </div>
             </div>
         </div>
     );
 };
 
-const ProductRating = ({ rating, reviews }) => (
+const ProductRating = ({ rating, reviews, t }) => (
     <div className="flex items-center space-x-2 bg-gray-50 px-3 py-1.5 rounded-full">
         <div className="flex">
             {[...Array(5)].map((_, i) => (
@@ -436,7 +401,7 @@ const ProductRating = ({ rating, reviews }) => (
                 </span>
             ))}
         </div>
-        <span className="text-xs text-gray-600">{reviews} รีวิว</span>
+        <span className="text-xs text-gray-600">{t('product.reviews_count', { count: reviews })}</span>
     </div>
 );
 

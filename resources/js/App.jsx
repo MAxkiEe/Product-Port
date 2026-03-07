@@ -1,211 +1,78 @@
-import React, { useState, useRef, useEffect } from "react";
-import ReactDOM from "react-dom/client"; 
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "../css/app.css";
+import "./i18n"; // Import i18n configuration
 
-// Components
-import Navbar from './components/Navbar';
-import HomeSection from './components/sections/HomeSection';
-import ProductsSection from './components/sections/ProductsSection';
-import AboutSection from './components/sections/AboutSection';
-import ContactSection from './components/sections/ContactSection';
-import Footer from './components/Footer';
-import CartModal from './components/modals/CartModal';
-import SearchModal from './components/modals/SearchModal';
-import ProductModal from './components/modals/ProductModal';
-import Notification from './components/Notification';
-import LoadingSpinner from './components/LoadingSpinner';
+import { AuthProvider, useAuth } from "./context/AuthContext";
+import Index from "./components/Index";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import ForgotPassword from "./components/ForgotPassword";
+import ResetPassword from "./components/ResetPassword";
+import AdminDashboard from "./components/AdminDashboard";
+import UserDashboard from "./components/UserDashboard";
+import AuthModal from "./components/AuthModal";
 
-// Data
-import { products } from './components/data/ProductsData';
+// Protected Route Component
+const ProtectedRoute = ({ children, roles }) => {
+    const { user, loading, hasRole } = useAuth();
+
+    if (loading) {
+        return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    }
+
+    if (!user) {
+        return <Navigate to="/login" replace />;
+    }
+
+    if (roles && !hasRole(roles)) {
+        return <Navigate to="/" replace />;
+    }
+
+    return children;
+};
 
 function App() {
-    // State Management
-    const [cartCount, setCartCount] = useState(0);
-    const [showCart, setShowCart] = useState(false);
-    const [cartItems, setCartItems] = useState([]);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [showSearch, setShowSearch] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [notification, setNotification] = useState({ show: false, message: '', type: 'success' });
-    const [wishlist, setWishlist] = useState([]);
-    const [selectedProduct, setSelectedProduct] = useState(null);
-    const [showProductModal, setShowProductModal] = useState(false);
-    const [activeSection, setActiveSection] = useState('home');
-
-    // Refs for sections
-    const homeRef = useRef(null);
-    const productsRef = useRef(null);
-    const aboutRef = useRef(null);
-    const contactRef = useRef(null);
-
-    // Scroll to section
-    const scrollToSection = (sectionRef, sectionName) => {
-        setActiveSection(sectionName);
-        sectionRef.current.scrollIntoView({ behavior: 'smooth' });
-    };
-
-    // Detect active section on scroll
-    useEffect(() => {
-        const handleScroll = () => {
-            const sections = [
-                { ref: homeRef, name: 'home' },
-                { ref: productsRef, name: 'products' },
-                { ref: aboutRef, name: 'about' },
-                { ref: contactRef, name: 'contact' }
-            ];
-
-            for (const section of sections) {
-                if (section.ref.current) {
-                    const rect = section.ref.current.getBoundingClientRect();
-                    if (rect.top <= 100 && rect.bottom >= 100) {
-                        setActiveSection(section.name);
-                        break;
-                    }
-                }
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
-    // Cart Functions
-    const addToCart = (product, quantity = 1) => {
-        setIsLoading(true);
-        setTimeout(() => {
-            const existingItem = cartItems.find(item => item.id === product.id);
-            
-            if (existingItem) {
-                setCartItems(cartItems.map(item => 
-                    item.id === product.id 
-                        ? { ...item, quantity: item.quantity + quantity }
-                        : item
-                ));
-            } else {
-                setCartItems([...cartItems, { ...product, quantity }]);
-            }
-            
-            setCartCount(cartCount + quantity);
-            showNotification('เพิ่มสินค้าลงตะกร้าเรียบร้อย', 'success');
-            setIsLoading(false);
-        }, 500);
-    };
-
-    const removeFromCart = (productId) => {
-        const item = cartItems.find(item => item.id === productId);
-        setCartItems(cartItems.filter(item => item.id !== productId));
-        setCartCount(cartCount - item.quantity);
-        showNotification('ลบสินค้าออกจากตะกร้าแล้ว', 'info');
-    };
-
-    const updateCartQuantity = (productId, newQuantity) => {
-        if (newQuantity < 1) return;
-        
-        setCartItems(cartItems.map(item => {
-            if (item.id === productId) {
-                const diff = newQuantity - item.quantity;
-                setCartCount(cartCount + diff);
-                return { ...item, quantity: newQuantity };
-            }
-            return item;
-        }));
-    };
-
-    // Wishlist Functions
-    const toggleWishlist = (productId) => {
-        if (wishlist.includes(productId)) {
-            setWishlist(wishlist.filter(id => id !== productId));
-            showNotification('ลบออกจากรายการโปรด', 'info');
-        } else {
-            setWishlist([...wishlist, productId]);
-            showNotification('เพิ่มในรายการโปรดแล้ว', 'success');
-        }
-    };
-
-    // Notification
-    const showNotification = (message, type) => {
-        setNotification({ show: true, message, type });
-        setTimeout(() => setNotification({ show: false, message: '', type: 'success' }), 3000);
-    };
-
     return (
-        <div className="min-h-screen bg-white">
-            <Navbar 
-                activeSection={activeSection}
-                scrollToSection={scrollToSection}
-                homeRef={homeRef}
-                productsRef={productsRef}
-                aboutRef={aboutRef}
-                contactRef={contactRef}
-                setShowSearch={setShowSearch}
-                setShowCart={setShowCart}
-                cartCount={cartCount}
-            />
-            
-            <main>
-                <HomeSection 
-                    homeRef={homeRef}
-                    productsRef={productsRef}
-                    scrollToSection={scrollToSection}
-                />
+        <AuthProvider>
+            <AuthModal />
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/forgot-password" element={<ForgotPassword />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
+                    <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-                <ProductsSection 
-                    productsRef={productsRef}
-                    products={products}
-                    wishlist={wishlist}
-                    toggleWishlist={toggleWishlist}
-                    addToCart={addToCart}
-                    isLoading={isLoading}
-                    setSelectedProduct={setSelectedProduct}
-                    setShowProductModal={setShowProductModal}
-                />
+                    {/* Public/User Route */}
+                    <Route
+                        path="/"
+                        element={<Index />}
+                    />
 
-                <AboutSection aboutRef={aboutRef} />
+                    {/* Standard User Dashboard */}
+                    <Route
+                        path="/user-dashboard"
+                        element={
+                            <ProtectedRoute>
+                                <UserDashboard />
+                            </ProtectedRoute>
+                        }
+                    />
 
-                <ContactSection contactRef={contactRef} />
-            </main>
-
-            <Footer 
-                scrollToSection={scrollToSection}
-                aboutRef={aboutRef}
-                productsRef={productsRef}
-                contactRef={contactRef}
-            />
-
-            {/* Modals */}
-            <CartModal 
-                showCart={showCart}
-                setShowCart={setShowCart}
-                cartItems={cartItems}
-                removeFromCart={removeFromCart}
-                updateCartQuantity={updateCartQuantity}
-            />
-
-            <SearchModal 
-                showSearch={showSearch}
-                setShowSearch={setShowSearch}
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-                products={products}
-                onSelectProduct={(product) => {
-                    setSelectedProduct(product);
-                    setShowProductModal(true);
-                }}
-            />
-
-            <ProductModal 
-                showProductModal={showProductModal}
-                setShowProductModal={setShowProductModal}
-                selectedProduct={selectedProduct}
-                wishlist={wishlist}
-                toggleWishlist={toggleWishlist}
-                addToCart={addToCart}
-                isLoading={isLoading}
-            />
-
-            <Notification notification={notification} />
-            <LoadingSpinner isLoading={isLoading} />
-        </div>
+                    {/* Admin Dashboard */}
+                    <Route
+                        path="/dashboard"
+                        element={
+                            <ProtectedRoute roles={['Admin']}>
+                                <AdminDashboard />
+                            </ProtectedRoute>
+                        }
+                    />
+                </Routes>
+            </BrowserRouter>
+        </AuthProvider>
     );
 }
 
@@ -248,7 +115,6 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// *** เพิ่มส่วนนี้เพื่อ render ลง DOM ***
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
